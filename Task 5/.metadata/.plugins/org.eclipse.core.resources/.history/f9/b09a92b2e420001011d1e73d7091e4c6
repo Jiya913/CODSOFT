@@ -1,0 +1,77 @@
+package ui;
+
+import dao.CourseDAO;
+import model.Course;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+
+
+public class ViewCourseFrame extends JFrame {
+
+	    public ViewCourseFrame() {
+	        setTitle("All Registered Students");
+	        setSize(700, 500);
+	        setLocationRelativeTo(null);
+	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	        setResizable(false);
+
+	        // Optional Background
+	        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/bg2.jpg");
+	        backgroundPanel.setLayout(new BorderLayout());
+	        setContentPane(backgroundPanel);
+
+	        // Table setup
+	        String[] columnNames = {"Course code", "Name", "Description", "Capacity", "Schedule"};
+	        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+	        JTable table = new JTable(tableModel);
+	        table.setRowHeight(30);
+	        table.setFont(new Font("MV Boli", Font.PLAIN, 16));
+	        JScrollPane scrollPane = new JScrollPane(table);
+	        scrollPane.setOpaque(false);
+	        scrollPane.getViewport().setOpaque(false);
+	        
+	        for (int row = 0; row < table.getRowCount(); row++) {
+	            int rowHeight = table.getRowHeight();
+
+	            for (int column = 0; column < table.getColumnCount(); column++) {
+	                Component comp = table.prepareRenderer(table.getCellRenderer(row, column), row, column);
+	                rowHeight = Math.max(rowHeight, comp.getPreferredSize().height);
+	            }
+
+	            table.setRowHeight(row, rowHeight);
+	        }
+	        
+	     // Enable word wrap for all cells
+	        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+	            @Override
+	            public Component getTableCellRendererComponent(JTable table, Object value,
+	                                                           boolean isSelected, boolean hasFocus,
+	                                                           int row, int column) {
+	                JTextArea textArea = new JTextArea(value != null ? value.toString() : "");
+	                textArea.setWrapStyleWord(true);
+	                textArea.setLineWrap(true);
+	                textArea.setFont(new Font("MV Boli", Font.PLAIN, 16)); // match table font
+	                textArea.setOpaque(true);
+	                textArea.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+	                textArea.setForeground(isSelected ? table.getSelectionForeground() : table.getForeground());
+	                return textArea;
+	            }
+	        });
+
+
+	        // Load data from DB
+	        CourseDAO courseDAO = new CourseDAO();
+	        List<Course> courses = courseDAO.getAllCourses();
+	        for (Course c : courses) {
+	            tableModel.addRow(new Object[]{c.getCourseCode(), c.getTitle(), c.getDescription(), c.getCapacity(), c.getSchedule()});
+	        }
+
+	        backgroundPanel.add(scrollPane, BorderLayout.CENTER);
+	        setVisible(true);
+	    }
+
+
+}

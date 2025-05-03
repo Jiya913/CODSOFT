@@ -1,0 +1,49 @@
+package ui;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+import model.Student; // Assuming you have a Student class
+import dao.RegistrationDAO;
+
+public class ViewStudentsFrame extends JFrame {
+
+    public ViewStudentsFrame() {
+        setTitle("All Students");
+        setSize(800, 500);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/bg3.jpg");
+        setContentPane(backgroundPanel);
+        backgroundPanel.setLayout(new BorderLayout());
+
+        JLabel title = new JLabel("Student Records", JLabel.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 24));
+        title.setForeground(Color.WHITE);
+        title.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        backgroundPanel.add(title, BorderLayout.NORTH);
+
+        String[] columnNames = {"Student ID", "Name", "Email", "Department"};
+
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        JTable table = new JTable(model);
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
+        table.setRowHeight(24);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        backgroundPanel.add(scrollPane, BorderLayout.CENTER);
+
+        // DAO Call to get students list
+        RegistrationDAO dao = new RegistrationDAO();
+        List<Student> students = dao.getAllStudents(); // You should implement this method
+
+        for (Student s : students) {
+            Object[] row = {s.getId(), s.getName(), s.getEmail(), s.getDepartment()};
+            model.addRow(row);
+        }
+
+        setVisible(true);
+    }
+}

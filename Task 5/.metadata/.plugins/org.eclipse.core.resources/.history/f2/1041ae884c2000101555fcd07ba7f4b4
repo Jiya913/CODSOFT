@@ -1,0 +1,31 @@
+package codSoft;
+
+public class Student {
+    private String studentID;
+    private String name;
+    
+    public Student(String studentID, String name) {
+        this.studentID = studentID;
+        this.name = name;
+    }
+
+    // Getter for studentID
+    public String getStudentID() {
+        return studentID;
+    }
+
+    // Setter for studentID
+    public void setStudentID(String studentID) {
+        this.studentID = studentID;
+    }
+
+    // Getter for name
+    public String getName() {
+        return name;
+    }
+
+    // Setter for name
+    public void setName(String name) {
+        this.name = name;
+    }
+}

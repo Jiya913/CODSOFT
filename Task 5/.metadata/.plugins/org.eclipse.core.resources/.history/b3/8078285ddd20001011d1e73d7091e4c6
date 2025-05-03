@@ -1,0 +1,21 @@
+package ui;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class BackgroundPanel extends JPanel {
+    private Image backgroundImage;
+
+    public BackgroundPanel(String imagePath) {
+        // Load the background image from classpath
+        backgroundImage = new ImageIcon(getClass().getResource(imagePath)).getImage();
+        setLayout(null); // Allow absolute positioning like before
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Draw the image to fill the entire panel
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+    }
+}

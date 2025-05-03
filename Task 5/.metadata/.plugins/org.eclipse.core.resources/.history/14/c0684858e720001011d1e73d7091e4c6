@@ -1,0 +1,55 @@
+package ui;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class Starting extends JFrame {
+
+    public Starting() {
+        setTitle("Student Course Management System");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/bg1.jpg"); // change bg if you like
+        backgroundPanel.setLayout(null);
+        setContentPane(backgroundPanel);
+
+        JLabel titleLabel = new JLabel("Welcome to SCMS");
+        titleLabel.setFont(new Font("MV Boli", Font.BOLD, 28));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setBounds(160, 40, 400, 40);
+        backgroundPanel.add(titleLabel);
+
+        JButton loginBtn = new JButton("Login");
+        loginBtn.setBounds(200, 120, 200, 40);
+        loginBtn.setBackground(Color.CYAN);
+        loginBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        loginBtn.setFocusable(false);
+
+        JButton registerBtn = new JButton("New Student / Course");
+        registerBtn.setBounds(200, 190, 200, 40);
+        registerBtn.setBackground(Color.ORANGE);
+        registerBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        registerBtn.setFocusable(false);
+
+        backgroundPanel.add(loginBtn);
+        backgroundPanel.add(registerBtn);
+
+        // Actions
+        loginBtn.addActionListener(e -> {
+            new LoginFrame();  // Create this class if not yet made
+        });
+
+        registerBtn.addActionListener(e -> {
+            new RegisterOptionsFrame();  // We'll create this too
+        });
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new Starting();  // Launch app
+    }
+}

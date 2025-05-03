@@ -1,0 +1,49 @@
+package ui;
+
+import dao.CourseDAO;
+import model.course;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+
+
+public class ViewCourseFrame extends JFrame {
+
+	    public ViewCourse
+	    Frame() {
+	        setTitle("All Registered Students");
+	        setSize(700, 500);
+	        setLocationRelativeTo(null);
+	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	        setResizable(false);
+
+	        // Optional Background
+	        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/bg2.jpg");
+	        backgroundPanel.setLayout(new BorderLayout());
+	        setContentPane(backgroundPanel);
+
+	        // Table setup
+	        String[] columnNames = {"Course code", "Name", "Description", "Capacity", "Schedule"};
+	        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+	        JTable table = new JTable(tableModel);
+	        table.setRowHeight(30);
+	        table.setFont(new Font("MV Boli", Font.PLAIN, 16));
+	        JScrollPane scrollPane = new JScrollPane(table);
+	        scrollPane.setOpaque(false);
+	        scrollPane.getViewport().setOpaque(false);
+
+	        // Load data from DB
+	        CourseDAO courseDAO = new CourseDAO();
+	        List<Course> students = courseDAO.getAllCourses();
+	        for (Course s : students) {
+	            tableModel.addRow(new Object[]{s.CourseCode(), s.getName()});
+	        }
+
+	        backgroundPanel.add(scrollPane, BorderLayout.CENTER);
+	        setVisible(true);
+	    }
+
+
+}

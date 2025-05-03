@@ -1,0 +1,64 @@
+package ui;
+
+//import dao.CourseDAO;
+//import model.Course;
+//
+//import dao.StudentDAO;
+//import model.Student;
+
+import dao.RegistrationDAO;
+import model.Registration;
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+//        CourseDAO courseDAO = new CourseDAO();
+//        List<Course> courses = courseDAO.getAllCourses();
+//
+//        for (Course c : courses) {
+//            System.out.println("Course Code: " + c.getCourseCode());
+//            System.out.println("Title: " + c.getTitle());
+//            System.out.println("Description: " + c.getDescription());
+//            System.out.println("Capacity: " + c.getCapacity());
+//            System.out.println("Schedule: " + c.getSchedule());
+//            System.out.println("-----------------------------------");
+//        }
+        
+//        StudentDAO studentDAO = new StudentDAO();
+//        List<Student> students = studentDAO.getAllStudents();
+//
+//        for (Student s : students) {
+//            System.out.println("Student ID: " + s.getStudentID());
+//            System.out.println("Name: " + s.getName());
+//            System.out.println("-----------------------------------");
+//        }
+    	
+    	RegistrationDAO registrationDAO = new RegistrationDAO();
+
+        // 🔹 1. Register a student to a course
+        String studentID = "S101";
+        String courseCode = "CS101";
+
+        boolean success = registrationDAO.registerStudentToCourse(studentID, courseCode);
+        if (success) {
+            System.out.println("✅ Student registered to course!");
+        } else {
+            System.out.println("❌ Registration failed.");
+        }
+
+        // 🔹 2. Get all courses by student
+        List<Registration> studentCourses = registrationDAO.getCoursesByStudentId(studentID);
+        System.out.println("\n📘 Courses registered by " + studentID + ":");
+        for (Registration reg : studentCourses) {
+            System.out.println("- " + reg.getCourseCode());
+        }
+
+        // 🔹 3. Get all students in a course
+        List<Registration> courseStudents = registrationDAO.getStudentsByCourseCode(courseCode);
+        System.out.println("\n👥 Students registered in course " + courseCode + ":");
+        for (Registration reg : courseStudents) {
+            System.out.println("- " + reg.getStudentID());
+        }
+    }
+}

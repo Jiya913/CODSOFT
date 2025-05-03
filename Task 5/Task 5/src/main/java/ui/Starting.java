@@ -1,0 +1,54 @@
+package ui;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class Starting extends JFrame {
+
+    public Starting() {
+        setTitle("Student Course Management System");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/Start_Page.png"); 
+        backgroundPanel.setLayout(null);
+        setContentPane(backgroundPanel);
+
+        JLabel titleLabel = new JLabel();
+        titleLabel.setFont(new Font("MV Boli", Font.BOLD, 28));
+        titleLabel.setForeground(Color.BLACK);
+        titleLabel.setBounds(160, 20, 400, 40);
+        backgroundPanel.add(titleLabel);
+
+        JButton loginBtn = new JButton("Login");
+        loginBtn.setBounds(200, 120, 200, 40);
+        loginBtn.setBackground(Color.CYAN);
+        loginBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        loginBtn.setFocusable(false);
+
+        JButton registerBtn = new JButton("New Student / Course");
+        registerBtn.setBounds(200, 190, 200, 40);
+        registerBtn.setBackground(Color.ORANGE);
+        registerBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        registerBtn.setFocusable(false);
+
+        backgroundPanel.add(loginBtn);
+        backgroundPanel.add(registerBtn);
+
+        loginBtn.addActionListener(e -> {
+            new LoginFrame();  
+        });
+
+        registerBtn.addActionListener(e -> {
+            new RegisterOptionsFrame(); 
+        });
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new Starting();  
+    }
+}

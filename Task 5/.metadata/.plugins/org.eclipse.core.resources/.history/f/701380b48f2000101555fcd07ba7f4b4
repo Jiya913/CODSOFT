@@ -1,0 +1,37 @@
+package ui;
+
+//import dao.CourseDAO;
+//import model.Course;
+//
+//import dao.StudentDAO;
+//import model.Student;
+
+import dao.RegistrationDAO;
+import model.Registration;
+
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+//        CourseDAO courseDAO = new CourseDAO();
+//        List<Course> courses = courseDAO.getAllCourses();
+//
+//        for (Course c : courses) {
+//            System.out.println("Course Code: " + c.getCourseCode());
+//            System.out.println("Title: " + c.getTitle());
+//            System.out.println("Description: " + c.getDescription());
+//            System.out.println("Capacity: " + c.getCapacity());
+//            System.out.println("Schedule: " + c.getSchedule());
+//            System.out.println("-----------------------------------");
+//        }
+        
+//        StudentDAO studentDAO = new StudentDAO();
+//        List<Student> students = studentDAO.getAllStudents();
+//
+//        for (Student s : students) {
+//            System.out.println("Student ID: " + s.getStudentID());
+//            System.out.println("Name: " + s.getName());
+//            System.out.println("-----------------------------------");
+//        }
+    }
+}

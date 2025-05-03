@@ -1,0 +1,43 @@
+package ui;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class RegisterStudentFrame extends JFrame {
+    public RegisterStudentFrame() {
+        setTitle("Register Student to Course");
+        setSize(700, 500);
+        setLayout(null);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        JLabel studentLabel = new JLabel("Student ID:");
+        studentLabel.setBounds(30, 30, 100, 25);
+        JTextField studentField = new JTextField();
+        studentField.setBounds(140, 30, 200, 25);
+
+        JLabel courseLabel = new JLabel("Course Code:");
+        courseLabel.setBounds(30, 70, 100, 25);
+        JTextField courseField = new JTextField();
+        courseField.setBounds(140, 70, 200, 25);
+
+        JButton submitBtn = new JButton("Register");
+        submitBtn.setBounds(140, 120, 100, 30);
+
+        add(studentLabel);
+        add(studentField);
+        add(courseLabel);
+        add(courseField);
+        add(submitBtn);
+
+        // You can call your DAO here
+        submitBtn.addActionListener(e -> {
+            String sid = studentField.getText();
+            String code = courseField.getText();
+            boolean success = new dao.RegistrationDAO().registerStudentToCourse(sid, code);
+            JOptionPane.showMessageDialog(this, success ? "✅ Registered!" : "❌ Failed");
+        });
+
+        setVisible(true);
+    }
+}

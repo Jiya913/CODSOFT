@@ -1,0 +1,146 @@
+package ui;
+
+import dao.RegistrationDAO;
+import model.Registration;
+import model.Student;
+import model.Course;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+
+public class Main {
+    private static RegistrationDAO dao = new RegistrationDAO();
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> createUI());
+    }
+
+    private static void createUI() {
+        JFrame frame = new JFrame("Student Course Registration System");
+        frame.setSize(700, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
+//        frame.setLayout(new GridLayout(6, 1, 10, 10));
+        frame.setLayout(null);
+        
+        JLabel titleLabel = new JLabel("Student Course Registration System", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setForeground(new Color(0x4CAF50)); // Green color
+        titleLabel.setBounds(0, 20, 700, 150);
+        frame.add(titleLabel);
+        ImageIcon image = new ImageIcon("src/logo2.png");
+        Image scaledImage = image.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+        titleLabel.setIcon(new ImageIcon(scaledImage));
+
+        JButton registerBtn = new JButton("Register Student to Course");
+        registerBtn.setBackground(new Color(0x4CAF50)); 
+        registerBtn.setForeground(Color.WHITE);
+        registerBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        registerBtn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        registerBtn.setFocusPainted(false);
+        registerBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        registerBtn.setBounds(50, 230, 250, 50);
+
+
+        JButton dropBtn = new JButton("Drop Student from Course");
+        dropBtn.setBackground(Color.red); 
+        dropBtn.setForeground(Color.WHITE);
+        dropBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        dropBtn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        dropBtn.setFocusPainted(false);
+        dropBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        dropBtn.setBounds(350, 230, 250, 50);
+
+        JButton viewAllBtn = new JButton("View All Registrations");
+        viewAllBtn.setBackground(Color.BLUE); 
+        viewAllBtn.setForeground(Color.WHITE);
+        viewAllBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        viewAllBtn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        viewAllBtn.setFocusPainted(false);
+        viewAllBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        viewAllBtn.setBounds(200, 380, 250, 50);        
+
+        JButton viewStudentsBtn = new JButton("View Students by Course");
+        viewStudentsBtn.setBackground(Color.ORANGE); 
+        viewStudentsBtn.setForeground(Color.BLACK);
+        viewStudentsBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        viewStudentsBtn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        viewStudentsBtn.setFocusPainted(false);
+        viewStudentsBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        viewStudentsBtn.setBounds(50, 300, 250, 50);
+
+        JButton viewCoursesBtn = new JButton("View Courses by Student");
+        viewCoursesBtn.setBackground(Color.yellow); 
+        viewCoursesBtn.setForeground(Color.BLACK);
+        viewCoursesBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        viewCoursesBtn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        viewCoursesBtn.setFocusPainted(false);
+        viewCoursesBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        viewCoursesBtn.setBounds(350, 300, 250, 50);
+
+        frame.add(registerBtn);
+        frame.add(dropBtn);
+        frame.add(viewAllBtn);
+        frame.add(viewStudentsBtn);
+        frame.add(viewCoursesBtn);
+
+        // Register
+        registerBtn.addActionListener(e -> {
+            String sid = JOptionPane.showInputDialog("Enter Student ID:");
+            String code = JOptionPane.showInputDialog("Enter Course Code:");
+            if (dao.registerStudentToCourse(sid, code)) {
+                JOptionPane.showMessageDialog(frame, "✅ Registered Successfully!");
+            } else {
+                JOptionPane.showMessageDialog(frame, "❌ Registration Failed.");
+            }
+        });
+
+        // Drop
+        dropBtn.addActionListener(e -> {
+            String sid = JOptionPane.showInputDialog("Enter Student ID:");
+            String code = JOptionPane.showInputDialog("Enter Course Code:");
+            if (dao.dropStudentFromCourse(sid, code)) {
+                JOptionPane.showMessageDialog(frame, "✅ Dropped Successfully!");
+            } else {
+                JOptionPane.showMessageDialog(frame, "❌ Drop Failed.");
+            }
+        });
+
+        // View All
+        viewAllBtn.addActionListener(e -> {
+            List<Registration> list = dao.getAllRegistrations();
+            StringBuilder sb = new StringBuilder("📋 All Registrations:\n\n");
+            for (Registration r : list) {
+                sb.append("Student: ").append(r.getStudentID()).append(" | Course: ").append(r.getCourseCode()).append("\n");
+            }
+            JOptionPane.showMessageDialog(frame, sb.toString());
+        });
+
+        // View Students by Course
+        viewStudentsBtn.addActionListener(e -> {
+            String code = JOptionPane.showInputDialog("Enter Course Code:");
+            List<Student> list = dao.getStudentsByCourseCode(code);
+            StringBuilder sb = new StringBuilder("👨‍🎓 Students in Course ").append(code).append(":\n\n");
+            for (Student s : list) {
+                sb.append("ID: ").append(s.getStudentID()).append(" | Name: ").append(s.getName()).append("\n");
+            }
+            JOptionPane.showMessageDialog(frame, sb.toString());
+        });
+
+        // View Courses by Student
+        viewCoursesBtn.addActionListener(e -> {
+            String sid = JOptionPane.showInputDialog("Enter Student ID:");
+            List<Course> list = dao.getCoursesByStudentID(sid);
+            StringBuilder sb = new StringBuilder("📚 Courses for Student ").append(sid).append(":\n\n");
+            for (Course c : list) {
+                sb.append("Code: ").append(c.getCourseCode()).append(" | Title: ").append(c.getTitle()).append("\n");
+            }
+            JOptionPane.showMessageDialog(frame, sb.toString());
+        });
+
+        frame.setVisible(true);
+    }
+}

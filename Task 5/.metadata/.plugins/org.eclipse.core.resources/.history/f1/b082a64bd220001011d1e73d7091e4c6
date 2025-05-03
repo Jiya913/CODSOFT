@@ -1,0 +1,97 @@
+package ui;
+
+import dao.RegistrationDAO;
+import model.Registration;
+import model.Student;
+import model.Course;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+
+public class Main {
+    private static RegistrationDAO dao = new RegistrationDAO();
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> createUI());
+    }
+
+    private static void createUI() {
+        JFrame frame = new JFrame("Student Course Registration System");
+        frame.setSize(800, 800);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
+//        frame.setLayout(new GridLayout(6, 1, 10, 10));
+        frame.setLayout(null);
+
+        JButton registerBtn = new JButton("Register Student to Course");
+        JButton dropBtn = new JButton("Drop Student from Course");
+        JButton viewAllBtn = new JButton("View All Registrations");
+        JButton viewStudentsBtn = new JButton("View Students by Course");
+        JButton viewCoursesBtn = new JButton("View Courses by Student");
+
+        frame.add(registerBtn);
+        frame.add(dropBtn);
+        frame.add(viewAllBtn);
+        frame.add(viewStudentsBtn);
+        frame.add(viewCoursesBtn);
+
+        // Register
+        registerBtn.addActionListener(e -> {
+            String sid = JOptionPane.showInputDialog("Enter Student ID:");
+            String code = JOptionPane.showInputDialog("Enter Course Code:");
+            if (dao.registerStudentToCourse(sid, code)) {
+                JOptionPane.showMessageDialog(frame, "✅ Registered Successfully!");
+            } else {
+                JOptionPane.showMessageDialog(frame, "❌ Registration Failed.");
+            }
+        });
+
+        // Drop
+        dropBtn.addActionListener(e -> {
+            String sid = JOptionPane.showInputDialog("Enter Student ID:");
+            String code = JOptionPane.showInputDialog("Enter Course Code:");
+            if (dao.dropStudentFromCourse(sid, code)) {
+                JOptionPane.showMessageDialog(frame, "✅ Dropped Successfully!");
+            } else {
+                JOptionPane.showMessageDialog(frame, "❌ Drop Failed.");
+            }
+        });
+
+        // View All
+        viewAllBtn.addActionListener(e -> {
+            List<Registration> list = dao.getAllRegistrations();
+            StringBuilder sb = new StringBuilder("📋 All Registrations:\n\n");
+            for (Registration r : list) {
+                sb.append("Student: ").append(r.getStudentID()).append(" | Course: ").append(r.getCourseCode()).append("\n");
+            }
+            JOptionPane.showMessageDialog(frame, sb.toString());
+        });
+
+        // View Students by Course
+        viewStudentsBtn.addActionListener(e -> {
+            String code = JOptionPane.showInputDialog("Enter Course Code:");
+            List<Student> list = dao.getStudentsByCourseCode(code);
+            StringBuilder sb = new StringBuilder("👨‍🎓 Students in Course ").append(code).append(":\n\n");
+            for (Student s : list) {
+                sb.append("ID: ").append(s.getStudentID()).append(" | Name: ").append(s.getName()).append("\n");
+            }
+            JOptionPane.showMessageDialog(frame, sb.toString());
+        });
+
+        // View Courses by Student
+        viewCoursesBtn.addActionListener(e -> {
+            String sid = JOptionPane.showInputDialog("Enter Student ID:");
+            List<Course> list = dao.getCoursesByStudentID(sid);
+            StringBuilder sb = new StringBuilder("📚 Courses for Student ").append(sid).append(":\n\n");
+            for (Course c : list) {
+                sb.append("Code: ").append(c.getCourseCode()).append(" | Title: ").append(c.getTitle()).append("\n");
+            }
+            JOptionPane.showMessageDialog(frame, sb.toString());
+        });
+
+        frame.setVisible(true);
+    }
+}

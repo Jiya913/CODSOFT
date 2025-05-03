@@ -1,0 +1,51 @@
+package dao;
+
+import database.DatabaseConnection;
+import model.Registration;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RegistrationDAO {
+
+	public boolean registerStudentToCourse(String studentID, String courseCode) {
+	    String countQuery = "SELECT COUNT(*) FROM Registrations WHERE courseCode = ?";
+	    String capacityQuery = "SELECT capacity FROM Courses WHERE courseCode = ?";
+	    String insertQuery = "INSERT INTO Registrations (studentID, courseCode) VALUES (?, ?)";
+
+	    try (Connection conn = DatabaseConnection.getConnection()) {
+	        // Check current count
+	        PreparedStatement countStmt = conn.prepareStatement(countQuery);
+	        countStmt.setString(1, courseCode);
+	        ResultSet rsCount = countStmt.executeQuery();
+	        rsCount.next();
+	        int registeredCount = rsCount.getInt(1);
+
+	        // Get course capacity
+	        PreparedStatement capStmt = conn.prepareStatement(capacityQuery);
+	        capStmt.setString(1, courseCode);
+	        ResultSet rsCap = capStmt.executeQuery();
+	        rsCap.next();
+	        int capacity = rsCap.getInt("capacity");
+
+	        if (registeredCount >= capacity) {
+	            System.out.println("❌ Cannot register. Course is full.");
+	            return false;
+	        }
+
+	        // Insert registration
+	        PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
+	        insertStmt.setString(1, studentID);
+	        insertStmt.setString(2, courseCode);
+	        int rows = insertStmt.executeUpdate();
+
+	        return rows > 0;
+
+	    } catch (SQLException e) {
+	        System.out.println("Error registering student: " + e.getMessage());
+	        return false;
+	    }
+	}
+
+}

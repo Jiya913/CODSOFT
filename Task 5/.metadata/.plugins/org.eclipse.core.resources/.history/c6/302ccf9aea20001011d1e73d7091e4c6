@@ -1,0 +1,51 @@
+package ui;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class RegisterOptionsFrame extends JFrame {
+
+    public RegisterOptionsFrame() {
+        setTitle("Register Options");
+        setSize(500, 300);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/bg2.jpg");
+        backgroundPanel.setLayout(null);
+        setContentPane(backgroundPanel);
+
+        JLabel titleLabel = new JLabel("What do you want to register?");
+        titleLabel.setFont(new Font("MV Boli", Font.BOLD, 20));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setBounds(100, 40, 350, 30);
+        backgroundPanel.add(titleLabel);
+
+        JButton studentBtn = new JButton("New Student");
+        studentBtn.setBounds(150, 100, 200, 40);
+        studentBtn.setBackground(Color.GREEN);
+        studentBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        studentBtn.setFocusable(false);
+
+        JButton courseBtn = new JButton("New Course");
+        courseBtn.setBounds(150, 160, 200, 40);
+        courseBtn.setBackground(Color.MAGENTA);
+        courseBtn.setFont(new Font("Arial", Font.BOLD, 16));
+        courseBtn.setFocusable(false);
+
+        backgroundPanel.add(studentBtn);
+        backgroundPanel.add(courseBtn);
+
+        // Actions
+        studentBtn.addActionListener(e -> {
+            new NewStudentFrame();  // We'll create this next
+        });
+
+        courseBtn.addActionListener(e -> {
+            new NewCourseFrame();  // Also creating this after
+        });
+
+        setVisible(true);
+    }
+}

@@ -1,0 +1,137 @@
+package dao;
+
+import database.DatabaseConnection;
+//import model.Registration;
+
+import model.Course;
+
+import model.Student;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RegistrationDAO {
+	
+
+	public List<Student> getStudentsByCourseCode(String courseCode) {
+	    List<Student> students = new ArrayList<>();
+
+	    String query = "SELECT s.* FROM Students s JOIN Registrations r ON s.studentID = r.studentID WHERE r.courseCode = ?";
+
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	        stmt.setString(1, courseCode);
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            String id = rs.getString("studentID");
+	            String name = rs.getString("name");
+
+	            Student student = new Student(id, name);
+	            students.add(student);
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Error fetching students for course: " + e.getMessage());
+	    }
+
+	    return students;
+	}
+
+
+	public List<Course> getCoursesByStudentID(String studentID) {
+	    List<Course> courses = new ArrayList<>();
+
+	    String query = "SELECT c.* FROM Courses c JOIN Registrations r ON c.courseCode = r.courseCode WHERE r.studentID = ?";
+
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+	        stmt.setString(1, studentID);
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            String code = rs.getString("courseCode");
+	            String title = rs.getString("title");
+	            String description = rs.getString("description");
+	            int capacity = rs.getInt("capacity");
+	            String schedule = rs.getString("schedule");
+
+	            Course course = new Course(code, title, description, capacity, schedule);
+	            courses.add(course);
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Error fetching registered courses: " + e.getMessage());
+	    }
+
+	    return courses;
+	}
+
+
+	public boolean registerStudentToCourse(String studentID, String courseCode) {
+	    String countQuery = "SELECT COUNT(*) FROM Registrations WHERE courseCode = ?";
+	    String capacityQuery = "SELECT capacity FROM Courses WHERE courseCode = ?";
+	    String insertQuery = "INSERT INTO Registrations (studentID, courseCode) VALUES (?, ?)";
+
+	    try (Connection conn = DatabaseConnection.getConnection()) {
+	        // Check current count
+	        PreparedStatement countStmt = conn.prepareStatement(countQuery);
+	        countStmt.setString(1, courseCode);
+	        ResultSet rsCount = countStmt.executeQuery();
+	        rsCount.next();
+	        int registeredCount = rsCount.getInt(1);
+
+	        // Get course capacity
+	        PreparedStatement capStmt = conn.prepareStatement(capacityQuery);
+	        capStmt.setString(1, courseCode);
+	        ResultSet rsCap = capStmt.executeQuery();
+	        rsCap.next();
+	        int capacity = rsCap.getInt("capacity");
+
+	        if (registeredCount >= capacity) {
+	            System.out.println("❌ Cannot register. Course is full.");
+	            return false;
+	        }
+
+	        // Insert registration
+	        PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
+	        insertStmt.setString(1, studentID);
+	        insertStmt.setString(2, courseCode);
+	        int rows = insertStmt.executeUpdate();
+
+	        return rows > 0;
+
+	    } catch (SQLException e) {
+	        System.out.println("Error registering student: " + e.getMessage());
+	        return false;
+	    }
+	}
+
+	public boolean dropStudentFromCourse(String studentID, String courseCode) {
+	    String deleteQuery = "DELETE FROM Registrations WHERE studentID = ? AND courseCode = ?";
+
+	    try (Connection conn = DatabaseConnection.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
+
+	        stmt.setString(1, studentID);
+	        stmt.setString(2, courseCode);
+
+	        int rows = stmt.executeUpdate();
+	        if (rows > 0) {
+	            System.out.println("✅ Successfully dropped the course.");
+	            return true;
+	        } else {
+	            System.out.println("⚠️ No such registration found.");
+	            return false;
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Error dropping course: " + e.getMessage());
+	        return false;
+	    }
+	}
+
+}

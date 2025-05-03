@@ -1,0 +1,59 @@
+package ui;
+import javax.swing.*;
+import java.awt.*;
+
+public class DropCourseFrameextends JFrame  {
+
+	    public DropCouseFrame() {
+	        setTitle("Register Student to Course");
+	        setSize(700, 500);
+	        setLayout(null);
+	        setLocationRelativeTo(null);
+	        setResizable(false);
+
+	        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/bg2.jpg"); 
+	        setContentPane(backgroundPanel);
+	        
+	        JLabel courseList = new JLabel("Course List: CS101 CS, CS102 Java");
+	        courseList.setBounds(20, 20, 500, 25);
+	        courseList.setForeground(Color.BLACK);
+	        courseList.setFont(new Font("Arial", Font.BOLD, 16));
+	        
+	        JLabel studentLabel = new JLabel("Student ID:");
+	        studentLabel.setBounds(180, 190, 100, 25);
+	        studentLabel.setForeground(Color.RED);
+	        studentLabel.setFont(new Font("Arial", Font.BOLD, 16));
+	        JTextField studentField = new JTextField();
+	        studentField.setBounds(320, 190, 200, 25);
+
+	        JLabel courseLabel = new JLabel("Course Code:");
+	        courseLabel.setFont(new Font("Arial", Font.BOLD, 16));
+	        courseLabel.setForeground(Color.RED);
+	        courseLabel.setBounds(180, 230, 130, 25);
+	        JTextField courseField = new JTextField();
+	        courseField.setBounds(320, 230, 200, 25);
+
+	        JButton submitBtn = new JButton("Register");
+	        submitBtn.setBounds(350, 300, 100, 30);
+	        submitBtn.setBackground(Color.green);
+	        submitBtn.setFocusable(false);
+
+	        add(courseList);
+	        add(studentLabel);
+	        add(studentField);
+	        add(courseLabel);
+	        add(courseField);
+	        add(submitBtn);
+
+	        // You can call your DAO here
+	        submitBtn.addActionListener(e -> {
+	            String sid = studentField.getText();
+	            String code = courseField.getText();
+	            boolean success = new dao.RegistrationDAO().registerStudentToCourse(sid, code);
+	            JOptionPane.showMessageDialog(this, success ? "✅ Registered!" : "❌ Failed");
+	        });
+
+	        setVisible(true);
+	    }
+
+}

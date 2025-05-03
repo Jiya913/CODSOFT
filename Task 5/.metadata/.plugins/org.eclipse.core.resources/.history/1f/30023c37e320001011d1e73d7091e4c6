@@ -1,0 +1,44 @@
+package ui;
+
+import dao.StudentDAO;
+import model.Student;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+
+public class ViewStudentsFrame extends JFrame {
+
+    public ViewStudentsFrame() {
+        setTitle("All Registered Students");
+        setSize(700, 500);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setResizable(false);
+
+        // Optional Background
+        BackgroundPanel backgroundPanel = new BackgroundPanel("/images/bg2.jpg");
+        backgroundPanel.setLayout(new BorderLayout());
+        setContentPane(backgroundPanel);
+
+        // Table setup
+        String[] columnNames = {"Student ID", "Name"};
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        JTable table = new JTable(tableModel);
+        table.setRowHeight(30);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+
+        // Load data from DB
+        StudentDAO studentDAO = new StudentDAO();
+        List<Student> students = studentDAO.getAllStudents();
+        for (Student s : students) {
+            tableModel.addRow(new Object[]{s.getStudentID(), s.getName()});
+        }
+
+        backgroundPanel.add(scrollPane, BorderLayout.CENTER);
+        setVisible(true);
+    }
+}

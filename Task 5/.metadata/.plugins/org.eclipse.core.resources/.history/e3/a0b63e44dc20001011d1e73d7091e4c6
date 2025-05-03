@@ -1,0 +1,8 @@
+package trial;
+
+public class Snippet {
+	public static void main(String[] args) {
+		extends javax.swing.JFrame
+	}
+}
+
